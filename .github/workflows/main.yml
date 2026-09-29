@@ -32,13 +32,9 @@ jobs:
       - name: 3. Instalar e Conectar Tailscale
         shell: powershell
         run: |
-          # Baixa o instalador do Tailscale
           Invoke-WebRequest -Uri "https://pkgs.tailscale.com/stable/tailscale-setup-latest.exe" -OutFile "tailscale-setup.exe"
-          
-          # Instala silenciosamente
           Start-Process -FilePath ".\tailscale-setup.exe" -ArgumentList "/quiet" -Wait
           
-          # Conecta à sua rede Tailscale
           $TailscalePath = "C:\Program Files\Tailscale\tailscale.exe"
           
           # ⚠️ COLE SUA CHAVE DO TAILSCALE AQUI DENTRO DAS ASPAS:
@@ -46,7 +42,6 @@ jobs:
           
           & $TailscalePath up --authkey "$AuthKey" --hostname "github-rdp-pc" --unattended
           
-          # Pega o IP privado gerado pelo Tailscale
           Start-Sleep -Seconds 5
           $IP = & $TailscalePath ip -4
           
@@ -60,5 +55,4 @@ jobs:
       - name: 4. Manter a Máquina Ligada
         shell: powershell
         run: |
-          # Loop infinito para o GitHub não desligar a máquina
           while ($true) { Start-Sleep -Seconds 3600 }
